@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --color-brand-50:  #f5f3ff;
+  --color-brand-100: #ede9fe;
+  --color-brand-200: #ddd6fe;
+  --color-brand-300: #c4b5fd;
+  --color-brand-400: #a78bfa;
+  --color-brand-500: #8b5cf6;
+  --color-brand-600: #7c3aed;
+  --color-brand-700: #6d28d9;
+  --color-accent-400: #22d3ee;
+  --color-accent-500: #06b6d4;
+  --color-accent-600: #0891b2;
+}
+
+html, body, #root { height: 100%; }
+body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+
+/* Subtle animated grid backdrop */
+.grid-bg {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124,58,237,0.25), transparent 70%),
+    linear-gradient(rgba(148,163,184,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148,163,184,0.06) 1px, transparent 1px);
+  background-size: 100% 100%, 48px 48px, 48px 48px;
+}
+.glow-text {
+  background: linear-gradient(135deg, #c4b5fd 0%, #22d3ee 60%, #f0abfc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+}
+.card:hover { border-color: rgba(167,139,250,0.4); }
+
+/* Markdown-ish body content */
+.prose-cphub h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2rem; margin-bottom: 0.75rem; color: white; }
+.prose-cphub h3 { font-size: 1.2rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.5rem; color: white; }
+.prose-cphub p { margin-bottom: 1rem; line-height: 1.75; color: #cbd5e1; }
+.prose-cphub ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+.prose-cphub ol { list-style: decimal; padding-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+.prose-cphub li { margin-bottom: 0.5rem; line-height: 1.7; }
+.prose-cphub a { color: var(--color-brand-400); text-decoration: underline; }
+.prose-cphub strong { color: white; font-weight: 600; }
+.prose-cphub code { font-family: var(--font-mono); background: rgba(255,255,255,0.08); padding: 0.1rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
