@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 
 export const SITE_NAME = "Cloud Partner Hub";
+export const SITE_URL = (import.meta.env.VITE_SITE_URL as string | undefined)?.replace(/\/$/, "") ?? "https://cloudpartnerhub.com";
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.svg`;
 export const DEFAULT_TITLE = `${SITE_NAME} · DevOps as a Service`;
 export const DEFAULT_DESCRIPTION =
   "DevOps, cloud architecture, CI/CD, Kubernetes and SRE — delivered as a managed service by senior engineers.";
@@ -77,16 +79,13 @@ export function useSeoMeta(meta: SeoMeta) {
     setMeta('meta[property="og:type"]', "property=og:type", meta.ogType ?? "website");
     setMeta('meta[property="og:site_name"]', "property=og:site_name", SITE_NAME);
     setMeta('meta[property="og:url"]', "property=og:url", canonical);
-    if (meta.ogImage) {
-      setMeta('meta[property="og:image"]', "property=og:image", meta.ogImage);
-    }
+    const ogImage = meta.ogImage ?? DEFAULT_OG_IMAGE;
+    setMeta('meta[property="og:image"]', "property=og:image", ogImage);
 
     setMeta('meta[name="twitter:card"]', "name=twitter:card", twitterCard);
     setMeta('meta[name="twitter:title"]', "name=twitter:title", ogTitle);
     setMeta('meta[name="twitter:description"]', "name=twitter:description", ogDescription);
-    if (meta.ogImage) {
-      setMeta('meta[name="twitter:image"]', "name=twitter:image", meta.ogImage);
-    }
+    setMeta('meta[name="twitter:image"]', "name=twitter:image", ogImage);
 
     setLink("canonical", canonical);
 

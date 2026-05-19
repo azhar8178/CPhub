@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0f0f1a"/>
+      <stop offset="100%" stop-color="#0c1929"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="0" y1="0" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#3b1d8a" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#0f0f1a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <g transform="translate(100, 180)">
+    <svg viewBox="0 0 88 88" width="88" height="88" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="logo-g" x1="0" y1="0" x2="88" y2="88" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#7c3aed"/>
+          <stop offset="100%" stop-color="#06b6d4"/>
+        </linearGradient>
+      </defs>
+      <path d="M44 4 L78.2 23 L78.2 61 L44 80 L9.8 61 L9.8 23 Z" stroke="url(#logo-g)" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="44" cy="42" r="8.4" fill="url(#logo-g)"/>
+      <line x1="44" y1="33.6" x2="44" y2="22" stroke="url(#logo-g)" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="44" cy="18.4" r="4.8" fill="url(#logo-g)" opacity="0.85"/>
+      <line x1="51.28" y1="46.2" x2="59.68" y2="51.06" stroke="url(#logo-g)" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="63.34" cy="53.14" r="4.8" fill="url(#logo-g)" opacity="0.85"/>
+      <line x1="36.72" y1="46.2" x2="28.32" y2="51.06" stroke="url(#logo-g)" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="24.66" cy="53.14" r="4.8" fill="url(#logo-g)" opacity="0.85"/>
+    </svg>
+  </g>
+
+  <text x="100" y="330" font-family="Inter, system-ui, sans-serif" font-size="72" font-weight="900" fill="white" letter-spacing="-2">Cloud Partner</text>
+  <text x="100" y="415" font-family="Inter, system-ui, sans-serif" font-size="72" font-weight="900" fill="url(#brand)" letter-spacing="-2">Hub</text>
+
+  <text x="100" y="490" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="400" fill="#94a3b8">DevOps · Cloud Architecture · Kubernetes · SRE</text>
+  <text x="100" y="530" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="400" fill="#475569">Delivered as a managed service by senior engineers.</text>
+
+  <rect x="100" y="560" width="160" height="3" rx="1.5" fill="url(#brand)"/>
+
+  <text x="1100" y="600" font-family="Inter, system-ui, sans-serif" font-size="20" fill="#334155" text-anchor="end">cloudpartnerhub.com</text>
+</svg>
