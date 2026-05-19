@@ -23,6 +23,7 @@ export default defineConfig({
     allowedHosts: true,
     proxy: {
       "/api": { target: apiTarget, changeOrigin: true },
+      "/sitemap.xml": { target: apiTarget, changeOrigin: true },
     },
   },
   preview: { port, host: "0.0.0.0", allowedHosts: true },

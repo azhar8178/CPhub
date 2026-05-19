@@ -9,6 +9,8 @@ export type CphubPage = {
   sections: PageSection[];
   seoTitle: string | null;
   seoDescription: string | null;
+  seoKeywords: string | null;
+  ogImage: string | null;
 };
 
 export type CphubPost = {
@@ -21,6 +23,8 @@ export type CphubPost = {
   author: string;
   tags: string[];
   publishedAt: string | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
 };
 
 export type CtaSpec = { label: string; href: string };

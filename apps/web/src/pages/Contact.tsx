@@ -2,11 +2,19 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { Mail, Phone, MapPin, CheckCircle2, Loader2 } from "lucide-react";
+import { useSeoMeta, SITE_NAME } from "@/lib/seo";
 
 export default function Contact() {
   const { data: settings } = useQuery({ queryKey: ["settings"], queryFn: api.settings });
   const [state, setState] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [err, setErr] = useState<string | null>(null);
+
+  useSeoMeta({
+    title: `Contact · ${SITE_NAME}`,
+    description: "Get in touch for an architecture review, fixed-price project or full SRE coverage. We reply within one business day.",
+    canonical: `${window.location.origin}/contact`,
+    ogType: "website",
+  });
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

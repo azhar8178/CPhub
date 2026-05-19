@@ -2,9 +2,17 @@ import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { ArrowRight } from "lucide-react";
+import { useSeoMeta, SITE_NAME } from "@/lib/seo";
 
 export default function Blog() {
   const { data: posts, isLoading } = useQuery({ queryKey: ["posts"], queryFn: api.posts });
+
+  useSeoMeta({
+    title: `Blog · ${SITE_NAME}`,
+    description: "Engineering essays, war stories and patterns from the DevOps and cloud platforms we build.",
+    canonical: `${window.location.origin}/blog`,
+    ogType: "website",
+  });
 
   return (
     <div>

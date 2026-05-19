@@ -1,26 +1,34 @@
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { api } from "@/lib/api";
 import { SectionRenderer } from "@/components/Sections";
-import { useEffect } from "react";
+import { useSeoMeta, SITE_NAME } from "@/lib/seo";
 
 export default function PageView({ slug }: { slug: string }) {
+  const [location] = useLocation();
   const { data, isLoading, error } = useQuery({
     queryKey: ["page", slug],
     queryFn: () => api.page(slug),
   });
 
-  useEffect(() => {
-    if (data?.seoTitle) document.title = data.seoTitle;
-    if (data?.seoDescription) {
-      let m = document.querySelector('meta[name="description"]');
-      if (!m) {
-        m = document.createElement("meta");
-        m.setAttribute("name", "description");
-        document.head.appendChild(m);
-      }
-      m.setAttribute("content", data.seoDescription);
-    }
-  }, [data]);
+  const canonical = `${window.location.origin}${location}`;
+
+  useSeoMeta({
+    title: data?.seoTitle ?? (data ? `${data.title} · ${SITE_NAME}` : undefined),
+    description: data?.seoDescription ?? undefined,
+    canonical,
+    ogImage: data?.ogImage ?? undefined,
+    ogType: "website",
+    jsonLd: data
+      ? {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: data.seoTitle ?? data.title,
+          description: data.seoDescription ?? undefined,
+          url: canonical,
+        }
+      : undefined,
+  });
 
   if (isLoading) {
     return <div className="max-w-7xl mx-auto px-6 py-32 text-center text-slate-500">Loading…</div>;

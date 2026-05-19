@@ -1,8 +1,8 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { ArrowLeft } from "lucide-react";
-import { useEffect } from "react";
+import { useSeoMeta, SITE_NAME } from "@/lib/seo";
 
 function escapeHtml(s: string) {
   return s
@@ -12,14 +12,12 @@ function escapeHtml(s: string) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 }
-// Allow only http(s) and mailto URLs in markdown links to prevent javascript: URLs.
 function safeUrl(u: string) {
   const trimmed = u.trim();
   if (/^(https?:\/\/|mailto:|\/)/i.test(trimmed)) return escapeHtml(trimmed);
   return "#";
 }
 function inline(raw: string) {
-  // Escape first, then re-introduce a small allow-list of markdown formatting.
   return escapeHtml(raw)
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/`(.+?)`/g, "<code>$1</code>")
@@ -56,14 +54,44 @@ function renderBody(body: string) {
 }
 
 export default function BlogPost({ slug }: { slug: string }) {
+  const [location] = useLocation();
   const { data: post, isLoading, error } = useQuery({
     queryKey: ["post", slug],
     queryFn: () => api.post(slug),
   });
 
-  useEffect(() => {
-    if (post?.seoTitle ?? post?.title) document.title = `${post?.seoTitle ?? post?.title} · Cloud Partner Hub`;
-  }, [post]);
+  const canonical = `${window.location.origin}${location}`;
+  const postTitle = post?.seoTitle ?? post?.title;
+  const postDescription = post?.seoDescription ?? post?.excerpt ?? undefined;
+
+  useSeoMeta({
+    title: postTitle ? `${postTitle} · ${SITE_NAME}` : undefined,
+    description: postDescription,
+    canonical,
+    ogImage: post?.coverImage ?? undefined,
+    ogType: "article",
+    twitterCard: post?.coverImage ? "summary_large_image" : "summary",
+    jsonLd: post
+      ? {
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: post.title,
+          description: post.excerpt ?? undefined,
+          image: post.coverImage ?? undefined,
+          author: {
+            "@type": "Person",
+            name: post.author,
+          },
+          publisher: {
+            "@type": "Organization",
+            name: SITE_NAME,
+          },
+          datePublished: post.publishedAt ?? undefined,
+          url: canonical,
+          keywords: post.tags.join(", "),
+        }
+      : undefined,
+  });
 
   if (isLoading) return <div className="max-w-3xl mx-auto px-6 py-32 text-center text-slate-500">Loading…</div>;
   if (error || !post) {
