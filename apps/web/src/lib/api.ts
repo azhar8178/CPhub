@@ -35,7 +35,7 @@ export type PageSection =
   | { type: "process"; headline?: string; items: { step: string; title: string; body: string }[] }
   | { type: "logos"; headline?: string; items: string[] }
   | { type: "values"; headline?: string; items: { title: string; body: string }[] }
-  | { type: "cases"; items: { client: string; industry: string; headline: string; body: string; metrics: { value: string; label: string }[] }[] }
+  | { type: "cases"; items: { client: string; industry: string; headline: string; challenge?: string; body: string; stack?: string[]; metrics: { value: string; label: string }[] }[] }
   | { type: "cta"; headline: string; sub?: string; cta: CtaSpec };
 
 export type SiteSettings = {

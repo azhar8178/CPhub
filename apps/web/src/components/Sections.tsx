@@ -170,22 +170,43 @@ export function SectionRenderer({ section }: { section: PageSection }) {
     case "cases":
       return (
         <section className="py-24">
-          <div className="max-w-7xl mx-auto px-6 lg:px-10 space-y-6">
+          <div className="max-w-7xl mx-auto px-6 lg:px-10 space-y-8">
             {section.items.map((c, i) => (
-              <div key={i} className="card rounded-3xl p-8 md:p-12 grid md:grid-cols-3 gap-8">
-                <div className="md:col-span-2">
-                  <div className="text-xs font-mono font-semibold text-brand-300 mb-2">{c.industry}</div>
-                  <div className="text-2xl font-bold text-white mb-1">{c.client}</div>
-                  <h3 className="text-3xl font-bold text-white mb-4 leading-tight">{c.headline}</h3>
-                  <p className="text-slate-400 leading-relaxed">{c.body}</p>
-                </div>
-                <div className="grid grid-cols-3 md:grid-cols-1 gap-4 content-center">
-                  {c.metrics.map((m, mi) => (
-                    <div key={mi}>
-                      <div className="text-2xl md:text-3xl font-black glow-text">{m.value}</div>
-                      <div className="text-xs text-slate-400">{m.label}</div>
+              <div key={i} className="card rounded-3xl p-8 md:p-12">
+                <div className="grid md:grid-cols-3 gap-8 md:gap-12">
+                  <div className="md:col-span-2">
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="text-xs font-mono font-semibold text-brand-300 bg-brand-500/10 px-2.5 py-1 rounded-full border border-brand-500/20">
+                        {c.industry}
+                      </span>
                     </div>
-                  ))}
+                    <div className="text-2xl font-bold text-white mb-1">{c.client}</div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-5 leading-tight">{c.headline}</h3>
+                    {c.challenge && (
+                      <div className="mb-4 pl-4 border-l-2 border-white/10">
+                        <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-500 mb-1">The challenge</div>
+                        <p className="text-sm text-slate-400 leading-relaxed">{c.challenge}</p>
+                      </div>
+                    )}
+                    <p className="text-slate-300 leading-relaxed text-sm md:text-base">{c.body}</p>
+                    {c.stack && c.stack.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-5">
+                        {c.stack.map((tag, ti) => (
+                          <span key={ti} className="px-2.5 py-1 rounded-md bg-white/5 border border-white/8 text-xs text-slate-400 font-mono">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col justify-center gap-6">
+                    {c.metrics.map((m, mi) => (
+                      <div key={mi} className="pl-4 border-l-2 border-brand-500/30">
+                        <div className="text-2xl md:text-3xl font-black glow-text leading-none">{m.value}</div>
+                        <div className="text-xs text-slate-500 mt-1">{m.label}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}
