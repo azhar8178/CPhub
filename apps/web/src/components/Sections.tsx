@@ -214,6 +214,71 @@ export function SectionRenderer({ section }: { section: PageSection }) {
         </section>
       );
 
+    case "team": {
+      const getInitials = (name: string) =>
+        name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
+      const gradients = [
+        "from-brand-600 to-accent-500",
+        "from-accent-600 to-brand-400",
+        "from-violet-600 to-cyan-400",
+        "from-purple-600 to-teal-400",
+      ];
+      return (
+        <section className="py-24 bg-gradient-to-b from-transparent via-brand-900/10 to-transparent">
+          <div className="max-w-7xl mx-auto px-6 lg:px-10">
+            {section.headline && (
+              <div className="max-w-2xl mb-3">
+                <h2 className="text-3xl md:text-4xl font-bold text-white">{section.headline}</h2>
+              </div>
+            )}
+            {section.sub && (
+              <p className="text-slate-400 text-lg max-w-2xl mb-12">{section.sub}</p>
+            )}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {section.items.map((member, i) => (
+                <div key={i} className="card rounded-2xl p-6 flex flex-col gap-4">
+                  <div className="flex items-start gap-4">
+                    {member.avatar ? (
+                      <img
+                        src={member.avatar}
+                        alt={member.name}
+                        className="w-14 h-14 rounded-xl object-cover flex-shrink-0"
+                      />
+                    ) : (
+                      <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${gradients[i % gradients.length]} flex items-center justify-center flex-shrink-0`}>
+                        <span className="text-lg font-black text-white">{getInitials(member.name)}</span>
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <div className="font-bold text-white text-lg leading-tight">{member.name}</div>
+                      <div className="text-sm text-brand-300 font-medium mt-0.5">{member.role}</div>
+                      {member.location && (
+                        <div className="text-xs text-slate-500 mt-1">{member.location}</div>
+                      )}
+                    </div>
+                  </div>
+                  <p className="text-sm text-slate-400 leading-relaxed flex-1">{member.bio}</p>
+                  {member.linkedin && (
+                    <a
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-white transition group"
+                    >
+                      <svg className="w-4 h-4 text-brand-400 group-hover:text-white transition" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                      </svg>
+                      LinkedIn profile
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
     case "cta":
       return (
         <section className="py-20">
