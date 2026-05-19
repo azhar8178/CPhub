@@ -24,11 +24,24 @@ export default function Shell({ children, user }: { children: React.ReactNode; u
       <aside className="w-64 bg-slate-900 text-white flex flex-col">
         <div className="px-5 py-5 border-b border-white/10">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-cyan-400 flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="w-4 h-4 text-white"><path d="M5 18 L12 6 L19 18" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </div>
+            <svg viewBox="0 0 44 44" className="w-8 h-8 flex-shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="adm-g" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#7c3aed"/>
+                  <stop offset="100%" stopColor="#06b6d4"/>
+                </linearGradient>
+              </defs>
+              <path d="M22 2 L39.1 11.5 L39.1 30.5 L22 40 L4.9 30.5 L4.9 11.5 Z" stroke="url(#adm-g)" strokeWidth="1.6" strokeLinejoin="round"/>
+              <circle cx="22" cy="21" r="4.2" fill="url(#adm-g)"/>
+              <line x1="22" y1="16.8" x2="22" y2="11" stroke="url(#adm-g)" strokeWidth="1.6" strokeLinecap="round"/>
+              <circle cx="22" cy="9.2" r="2.4" fill="url(#adm-g)" opacity="0.85"/>
+              <line x1="25.64" y1="23.1" x2="29.84" y2="25.53" stroke="url(#adm-g)" strokeWidth="1.6" strokeLinecap="round"/>
+              <circle cx="31.67" cy="26.57" r="2.4" fill="url(#adm-g)" opacity="0.85"/>
+              <line x1="18.36" y1="23.1" x2="14.16" y2="25.53" stroke="url(#adm-g)" strokeWidth="1.6" strokeLinecap="round"/>
+              <circle cx="12.33" cy="26.57" r="2.4" fill="url(#adm-g)" opacity="0.85"/>
+            </svg>
             <div>
-              <div className="font-bold text-sm">Cloud Partner Hub</div>
+              <div className="font-medium text-sm text-slate-200">Cloud Partner <span className="font-extrabold text-white">Hub</span></div>
               <div className="text-xs text-slate-400">Admin</div>
             </div>
           </div>

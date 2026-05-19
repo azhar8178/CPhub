@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 44" fill="none">
+  <defs>
+    <linearGradient id="mark-grad" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="text-grad" x1="60" y1="0" x2="280" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ── Icon mark (44×44) ── -->
+  <!-- Hexagon outline -->
+  <path d="M22 2 L39.1 11.5 L39.1 30.5 L22 40 L4.9 30.5 L4.9 11.5 Z"
+        stroke="url(#mark-grad)" stroke-width="1.6" stroke-linejoin="round"/>
+  <!-- Center hub node -->
+  <circle cx="22" cy="21" r="4.2" fill="url(#mark-grad)"/>
+  <!-- Top spoke + node -->
+  <line x1="22" y1="16.8" x2="22" y2="11" stroke="url(#mark-grad)" stroke-width="1.6" stroke-linecap="round"/>
+  <circle cx="22" cy="9.2" r="2.4" fill="url(#mark-grad)" opacity="0.85"/>
+  <!-- Bottom-right spoke + node -->
+  <line x1="25.64" y1="23.1" x2="29.84" y2="25.53" stroke="url(#mark-grad)" stroke-width="1.6" stroke-linecap="round"/>
+  <circle cx="31.67" cy="26.57" r="2.4" fill="url(#mark-grad)" opacity="0.85"/>
+  <!-- Bottom-left spoke + node -->
+  <line x1="18.36" y1="23.1" x2="14.16" y2="25.53" stroke="url(#mark-grad)" stroke-width="1.6" stroke-linecap="round"/>
+  <circle cx="12.33" cy="26.57" r="2.4" fill="url(#mark-grad)" opacity="0.85"/>
+
+  <!-- ── Wordmark ── -->
+  <!-- "Cloud Partner" — regular weight -->
+  <text x="56" y="28"
+        font-family="Inter, -apple-system, sans-serif"
+        font-size="17"
+        font-weight="500"
+        letter-spacing="-0.3"
+        fill="#e2e8f0">Cloud Partner</text>
+  <!-- "Hub" — bold, slightly brighter -->
+  <text x="193" y="28"
+        font-family="Inter, -apple-system, sans-serif"
+        font-size="17"
+        font-weight="800"
+        letter-spacing="-0.4"
+        fill="white"> Hub</text>
+
+  <!-- Thin divider line between icon and text -->
+  <line x1="50" y1="10" x2="50" y2="34" stroke="white" stroke-opacity="0.12" stroke-width="1"/>
+</svg>
