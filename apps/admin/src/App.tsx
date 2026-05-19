@@ -12,6 +12,7 @@ import Templates from "@/pages/Templates";
 import Campaigns from "@/pages/Campaigns";
 import Media from "@/pages/Media";
 import SettingsPage from "@/pages/Settings";
+import Team from "@/pages/Team";
 
 export default function App() {
   const [location] = useLocation();
@@ -37,6 +38,7 @@ export default function App() {
       <Switch>
         <Route path="/" component={Overview} />
         <Route path="/pages" component={Pages} />
+        <Route path="/team" component={Team} />
         <Route path="/posts" component={Posts} />
         <Route path="/leads" component={Leads} />
         <Route path="/subscribers" component={Subscribers} />

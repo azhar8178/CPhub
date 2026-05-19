@@ -1,13 +1,14 @@
 import { Link, useLocation } from "wouter";
 import {
   LayoutDashboard, FileText, Newspaper, Inbox, Mail, Send,
-  Users, Image as ImageIcon, Settings, LogOut, ExternalLink,
+  Users, Image as ImageIcon, Settings, LogOut, ExternalLink, UserCircle2,
 } from "lucide-react";
 import { setToken } from "@/lib/api";
 
 const NAV: { href: string; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { href: "/", label: "Overview", icon: LayoutDashboard },
   { href: "/pages", label: "Pages", icon: FileText },
+  { href: "/team", label: "Team", icon: UserCircle2 },
   { href: "/posts", label: "Blog posts", icon: Newspaper },
   { href: "/leads", label: "Leads", icon: Inbox },
   { href: "/subscribers", label: "Subscribers", icon: Users },

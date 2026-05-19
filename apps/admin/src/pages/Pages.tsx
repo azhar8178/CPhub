@@ -120,7 +120,7 @@ function PageEditor({ initial, onClose }: { initial: Page | null; onClose: () =>
           <Input label="Subtitle" value={form.subtitle ?? ""} onChange={(e) => update("subtitle", e.target.value)} />
           <Textarea label="Sections (JSON)" rows={20} value={sectionsJson} onChange={(e) => setSectionsJson(e.target.value)} />
           <p className="text-xs text-slate-500">
-            Sections are an array of typed blocks. Supported types: <code className="font-mono">hero, stats, services, process, logos, values, cases, cta</code>.
+            Sections are an array of typed blocks. Supported types: <code className="font-mono">hero, stats, services, process, logos, values, team, cases, cta</code>. Use the <strong>Team</strong> page in the sidebar to edit team members visually.
           </p>
           {err && <div className="text-sm text-red-600">{err}</div>}
         </Card>
