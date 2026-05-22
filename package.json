@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "pnpm -r --parallel --stream run dev",
-    "build": "echo build complete",
-    "start": "cd apps/api && npx tsx src/index.ts",
+    "build": "cd apps/api && npm install",
+    "start": "cd apps/api && node_modules/.bin/tsx src/index.ts",
     "typecheck": "pnpm -r --if-present run typecheck"
   },
   "devDependencies": {
