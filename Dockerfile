@@ -8,5 +8,7 @@ COPY apps/admin/package.json apps/admin/
 COPY packages/ packages/
 RUN pnpm install --frozen-lockfile
 COPY . .
+RUN pnpm --filter @cphub/web run build
+RUN npm install -g serve
 EXPOSE 3000
-CMD ["pnpm", "--filter", "@cphub/api", "run", "start"]
+CMD ["serve", "-s", "apps/web/dist", "-l", "3000"]
