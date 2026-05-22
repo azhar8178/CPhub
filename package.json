@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "pnpm -r --parallel --stream run dev",
     "build": "echo build complete",
-    "start": "npm run start --workspace=apps/api",
+    "start": "cd apps/api && npx tsx src/index.ts",
     "typecheck": "pnpm -r --if-present run typecheck"
   },
   "devDependencies": {
