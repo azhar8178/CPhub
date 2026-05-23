@@ -1,220 +1,115 @@
 # Deployment Guide — Cloud Partner Hub
 
-This guide covers three deployment paths:
+This is a pnpm monorepo with three deployable apps, each with its own Dockerfile:
 
-1. **Bare metal / VPS** — Node.js + PM2 + nginx (recommended for most self-hosters)
-2. **Docker Compose** — easiest for clean servers
-3. **Manual build + serve** — for custom setups
+| App | Dockerfile | Default port |
+|---|---|---|
+| API (Express) | `apps/api/Dockerfile` | 3001 |
+| Web (public site) | `apps/web/Dockerfile` | 3000 |
+| Admin (CMS panel) | `apps/admin/Dockerfile` | 5173 |
+
+A single-container option (all three apps in one process) is also available using the root `Dockerfile`.
 
 ---
 
-## Prerequisites
+## Option 1 — PaaS / multi-container (current setup)
 
-| Requirement | Version |
+Each app is deployed as a separate service. The PaaS (e.g. Coolify) builds one container per app using its respective Dockerfile.
+
+### Step 1 — Set the Dockerfile path per service
+
+This is the most common misconfiguration. By default many PaaS platforms pick the root `Dockerfile`. You must explicitly point each service to its own file:
+
+| Service | Dockerfile path to set in PaaS |
 |---|---|
-| Node.js | 20 or 22 LTS |
-| pnpm | 9+ (`npm i -g pnpm`) |
-| PostgreSQL | 15 or 16 |
-| nginx | any recent version (for TLS termination) |
+| cph-api | `apps/api/Dockerfile` |
+| cph-web | `apps/web/Dockerfile` |
+| cph-admin | `apps/admin/Dockerfile` |
 
----
+**In Coolify:** go to the service → Configuration → Build → "Dockerfile location" → enter the path above.
 
-## Option 1 — Bare metal / VPS (recommended)
+### Step 2 — Set build arguments per service
 
-### 1. Clone and install
+Build args are baked into the frontend bundle at build time. Set them in the PaaS service configuration (not as runtime env vars).
 
-```bash
-git clone https://github.com/your-org/cphub.git
-cd cphub
-pnpm install
+**cph-web build args:**
+```
+VITE_SITE_URL=https://cloudpartnerhub.com
 ```
 
-### 2. Configure environment
-
-```bash
-cp .env.example .env
-nano .env
+**cph-admin build args:**
 ```
+BASE_PATH=/
+VITE_API_URL=https://cph-api.your-paas-domain.com
+```
+> `BASE_PATH=/` because the admin runs at its own hostname, not a sub-path.
+> `VITE_API_URL` must point to the public URL of your cph-api service.
 
-Set at minimum:
+**cph-api build args:** none needed.
 
-```env
-DATABASE_URL=postgres://cphub:yourpassword@localhost:5432/cphub
-JWT_SECRET=a-very-long-random-string-minimum-32-chars
-VITE_SITE_URL=https://yourdomain.com
+### Step 3 — Set runtime environment variables
+
+Runtime vars are set in the PaaS service environment settings (not build args).
+
+**cph-api environment:**
+```
+DATABASE_URL=postgres://cphub:yourpassword@your-db-host:5432/cphub
+JWT_SECRET=your-long-random-secret
 PORT=3001
+SMTP_HOST=smtp.yourmailprovider.com   # optional
+SMTP_PORT=587                          # optional
+SMTP_USER=your-smtp-user              # optional
+SMTP_PASS=your-smtp-pass              # optional
+MAIL_FROM=hello@cloudpartnerhub.com  # optional
 ```
 
-Generate a secure JWT secret:
-```bash
-node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+**cph-web environment:** none required at runtime (everything is baked in at build).
+
+**cph-admin environment:** none required at runtime (everything is baked in at build).
+
+### Step 4 — Reverse proxy / ingress
+
+The web frontend makes API calls to relative paths (`/api/...`, `/sitemap.xml`). When web and API run on separate hostnames, your ingress or nginx must proxy those paths from the web domain to the API service.
+
+**Example nginx ingress for the web domain:**
+```nginx
+server {
+    listen 443 ssl http2;
+    server_name cloudpartnerhub.com www.cloudpartnerhub.com;
+
+    # ssl_certificate / ssl_certificate_key ...
+
+    # Proxy API calls and sitemap to the API service
+    location /api/ {
+        proxy_pass         http://cph-api-service:3001;
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        proxy_set_header   X-Forwarded-Host $host;
+    }
+
+    location = /sitemap.xml {
+        proxy_pass         http://cph-api-service:3001;
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        proxy_set_header   X-Forwarded-Host $host;
+    }
+
+    # Everything else → web container
+    location / {
+        proxy_pass         http://cph-web-service:3000;
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+    }
+}
 ```
 
-> **Important:** `VITE_SITE_URL` must be set **before** building — it gets baked into the frontend bundle.
+If your PaaS (Coolify/Traefik) handles routing automatically, ensure these path prefixes are routed to the correct service.
 
-### 3. Create the database
+### Step 5 — First-time database setup
 
-```bash
-sudo -u postgres psql -c "CREATE USER cphub WITH PASSWORD 'yourpassword';"
-sudo -u postgres psql -c "CREATE DATABASE cphub OWNER cphub;"
-```
-
-### 4. Build all apps
-
-```bash
-# Build web (public site) — uses VITE_SITE_URL from .env
-pnpm --filter @cphub/web run build
-
-# Build admin panel
-pnpm --filter @cphub/admin run build
-```
-
-Both commands output to `apps/web/dist/public` and `apps/admin/dist/public` respectively.
-
-### 5. Start the API
-
-The API auto-runs database migrations and seeds initial content on first boot.
-
-```bash
-# One-off start (for testing)
-NODE_ENV=production pnpm --filter @cphub/api run start
-
-# Or source the .env file first
-export $(grep -v '^#' .env | xargs) && NODE_ENV=production pnpm --filter @cphub/api run start
-```
-
-You should see:
-```
-API server listening on port 3001
-Database migrations complete
-```
-
-### 6. Keep it running with PM2
-
-```bash
-npm i -g pm2
-
-pm2 start apps/api/src/index.ts \
-  --name cphub-api \
-  --interpreter "node" \
-  --interpreter-args "--loader tsx/esm" \
-  --env-file .env \
-  -- NODE_ENV=production
-
-pm2 save
-pm2 startup   # follow the printed command to enable auto-start on reboot
-```
-
-Check it's running:
-```bash
-pm2 status
-pm2 logs cphub-api
-```
-
-### 7. Configure nginx
-
-Copy the example config:
-```bash
-sudo cp nginx.conf.example /etc/nginx/sites-available/cloudpartnerhub.com
-sudo ln -s /etc/nginx/sites-available/cloudpartnerhub.com /etc/nginx/sites-enabled/
-```
-
-Edit it to replace `cloudpartnerhub.com` with your actual domain, then:
-
-```bash
-sudo nginx -t        # test config
-sudo systemctl reload nginx
-```
-
-### 8. TLS with Certbot
-
-```bash
-sudo apt install certbot python3-certbot-nginx
-sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
-```
-
-Certbot auto-updates the nginx config and sets up auto-renewal.
-
----
-
-## Option 2 — Docker Compose
-
-### 1. Configure environment
-
-```bash
-cp .env.example .env
-nano .env
-```
-
-Set `JWT_SECRET`, `POSTGRES_PASSWORD`, and `VITE_SITE_URL`.
-
-### 2. Build and start
-
-```bash
-docker compose up -d --build
-```
-
-The app will be available on port `3001` (or whatever `APP_PORT` is set to).
-Put nginx in front of it for TLS (same nginx config above, proxy_pass to `http://127.0.0.1:3001`).
-
-### 3. View logs
-
-```bash
-docker compose logs -f app
-```
-
-### 4. Update to latest
-
-```bash
-git pull
-docker compose up -d --build
-```
-
----
-
-## Option 3 — Manual build + serve
-
-Use this if you want to serve the static files from a CDN or separate static host.
-
-```bash
-# Build with your domain baked in
-VITE_SITE_URL=https://yourdomain.com pnpm --filter @cphub/web run build
-pnpm --filter @cphub/admin run build
-
-# Run only the API (no static serving)
-NODE_ENV=development PORT=3001 pnpm --filter @cphub/api run start
-```
-
-Then upload:
-- `apps/web/dist/public` → your static host / CDN
-- `apps/admin/dist/public` → same host, served at path `/admin/`
-
-Point your domain's root to the web static files. Configure your static host to:
-- Serve `/admin/*` from the admin dist folder, with a fallback to `/admin/index.html`
-- Serve everything else from the web dist folder, with a fallback to `/index.html`
-- Proxy `/api/*` and `/sitemap.xml` to your API process
-
----
-
-## How the production server works
-
-When `NODE_ENV=production` the single Node.js process serves **everything**:
-
-```
-GET /api/*         → Express API routes
-GET /sitemap.xml   → Dynamically generated from DB
-GET /admin         → apps/admin/dist/public/index.html (SPA)
-GET /admin/*       → apps/admin/dist/public/* (static assets + SPA fallback)
-GET /*             → apps/web/dist/public/* (static assets + SPA fallback)
-```
-
-No separate Vite dev server in production. nginx sits in front only for TLS and connection handling.
-
----
-
-## First-time setup
-
-On first boot the API automatically:
+On its first start, the `cph-api` container automatically:
 1. Runs all database migrations
 2. Creates the default admin user
 3. Seeds sample pages, blog posts, and settings
@@ -223,87 +118,130 @@ On first boot the API automatically:
 - Email: `admin@example.com`
 - Password: `Admin1234!`
 
-Change the password at `/admin/settings` after first login.
+Log in at `https://your-admin-hostname/` and go to Settings → Change password.
+
+---
+
+## Option 2 — Single container (VPS / Docker Compose)
+
+All three apps run inside one Node.js process. Simpler to operate on a single server.
+
+Uses the root `Dockerfile` and `docker-compose.single.yml`.
+
+```bash
+cp .env.example .env
+# Set JWT_SECRET, POSTGRES_PASSWORD, VITE_SITE_URL
+
+docker compose -f docker-compose.single.yml up -d --build
+```
+
+The app serves everything on port 3001:
+```
+GET /api/*        → Express API
+GET /sitemap.xml  → Dynamic XML from DB
+GET /admin/*      → Admin SPA
+GET /*            → Web SPA
+```
+
+Put nginx in front for TLS. See `nginx.conf.example` for a ready-to-use config.
+
+---
+
+## Local development (multi-container simulation)
+
+To test the PaaS setup locally using `docker-compose.yml`:
+
+```bash
+cp .env.example .env
+# Set JWT_SECRET and POSTGRES_PASSWORD at minimum
+
+docker compose up -d --build
+```
+
+Services will be available at:
+- Web: http://localhost:3000
+- Admin: http://localhost:5173
+- API: http://localhost:3001
 
 ---
 
 ## Environment variable reference
 
-| Variable | Required | Description |
-|---|---|---|
-| `DATABASE_URL` | yes | Full Postgres connection string |
-| `JWT_SECRET` | yes | Random string ≥ 32 chars for signing tokens |
-| `PORT` | no | API port (default: `3001`) |
-| `NODE_ENV` | yes in prod | Set to `production` to enable static file serving |
-| `VITE_SITE_URL` | yes in prod | Your public domain — set **before** building the frontend |
-| `SMTP_HOST` | no | SMTP server for password resets and email campaigns |
-| `SMTP_PORT` | no | SMTP port (default: `587`) |
-| `SMTP_USER` | no | SMTP username |
-| `SMTP_PASS` | no | SMTP password |
-| `MAIL_FROM` | no | From address for outgoing emails |
-| `POSTGRES_PASSWORD` | Docker only | Postgres password for the db container |
-| `APP_PORT` | Docker only | Host port to bind the app to (default: `3001`) |
+### Runtime (set in PaaS env / .env file)
+
+| Variable | Service | Required | Description |
+|---|---|---|---|
+| `DATABASE_URL` | api | yes | Postgres connection string |
+| `JWT_SECRET` | api | yes | Random string ≥ 32 chars |
+| `PORT` | api | no | API port (default: `3001`) |
+| `SMTP_HOST` | api | no | SMTP server for email |
+| `SMTP_PORT` | api | no | Default: `587` |
+| `SMTP_USER` | api | no | SMTP username |
+| `SMTP_PASS` | api | no | SMTP password |
+| `MAIL_FROM` | api | no | Outgoing From address |
+
+### Build-time (set as PaaS build args — baked into bundle)
+
+| Variable | Service | Required | Description |
+|---|---|---|---|
+| `VITE_SITE_URL` | web | yes | Public domain for canonical URLs + sitemap |
+| `BASE_PATH` | admin | yes | URL base path. Use `/` for own hostname, `/admin/` for sub-path |
+| `VITE_API_URL` | admin | yes | Full URL of the API service |
 
 ---
 
 ## Upgrading
 
-```bash
-git pull
-pnpm install
+Push a new commit to your repo and trigger a redeploy in your PaaS for each service (api → web → admin, in that order so migrations run first).
 
-# Rebuild the frontend (required after any code change)
-VITE_SITE_URL=https://yourdomain.com pnpm --filter @cphub/web run build
-pnpm --filter @cphub/admin run build
-
-# Restart the API (migrations run automatically on startup)
-pm2 restart cphub-api   # if using PM2
-# or: docker compose up -d --build   # if using Docker
-```
+If you changed environment variables or build args, update them in the PaaS config before redeploying.
 
 ---
 
 ## Troubleshooting
 
-### Admin panel returns 404 or blank page
+### Build fails: `ERR_PNPM_IGNORED_BUILDS` / esbuild
 
-**Cause:** The admin was not built before starting in production mode, or `NODE_ENV` is not set to `production`.
+pnpm v10 blocks dependency build scripts by default. This is fixed in the repo via `package.json`:
+```json
+"pnpm": { "onlyBuiltDependencies": ["esbuild"] }
+```
+If you're still seeing this, make sure you have the latest code pulled before redeploying.
+
+### PaaS builds the wrong app (e.g. admin builds the full monorepo)
+
+**Cause:** The PaaS is using the root `Dockerfile` instead of the per-app one.
+
+**Fix:** In your PaaS service settings, set the Dockerfile location to the per-app path (e.g. `apps/admin/Dockerfile`). See Step 1 above.
+
+### Admin panel is blank (white screen, no errors)
+
+**Cause:** Admin was built with `BASE_PATH=/admin/` but is being served from a different path, causing all assets to 404.
+
+**Fix:** Set `BASE_PATH=/` as a build arg if the admin runs at its own hostname. Only use `BASE_PATH=/admin/` if it's served as a sub-path of another domain.
+
+### API calls fail from the web frontend (404 / network error)
+
+**Cause:** The web app makes relative `/api/...` calls, which only work when the API is on the same origin OR your ingress proxies `/api/` to the API service.
+
+**Fix:** Configure your ingress/nginx to proxy `/api/` and `/sitemap.xml` from the web domain to the API service. See the nginx example in Step 4 above.
+
+### Sitemap shows wrong domain
+
+**Cause:** The API reads the `X-Forwarded-Host` header to build sitemap URLs. If your proxy doesn't forward this header, it falls back to `localhost`.
+
+**Fix:** Ensure your ingress sends `proxy_set_header X-Forwarded-Host $host;` and `proxy_set_header X-Forwarded-Proto $scheme;`.
+
+### Database migration errors on first boot
+
+**Cause:** `DATABASE_URL` is wrong or the database user lacks permissions.
 
 **Fix:**
 ```bash
-pnpm --filter @cphub/admin run build
-NODE_ENV=production pm2 restart cphub-api
+psql "$DATABASE_URL" -c "SELECT 1;"  # test connectivity
+psql "$DATABASE_URL" -c "\du"        # check user permissions
 ```
 
-### Site shows API JSON instead of the web app
+### Emails not sending
 
-**Cause:** The web app was not built.
-
-**Fix:**
-```bash
-VITE_SITE_URL=https://yourdomain.com pnpm --filter @cphub/web run build
-pm2 restart cphub-api
-```
-
-### Database migration errors on startup
-
-**Cause:** `DATABASE_URL` is wrong, or the database/user does not exist.
-
-**Fix:** Check the connection string and confirm the DB user has full access:
-```bash
-psql "$DATABASE_URL" -c "SELECT 1;"
-```
-
-### Emails are not sending
-
-Email delivery is optional. If `SMTP_HOST` is not set, password reset and campaign emails are silently skipped. Add your SMTP credentials to `.env` and restart.
-
-### API returns CORS errors
-
-The API allows all origins in production. If you're seeing CORS errors, check that nginx is forwarding `Host` and `X-Forwarded-*` headers correctly (the example config does this).
-
-### Sitemap shows `localhost` URLs instead of your domain
-
-**Cause:** `VITE_SITE_URL` or the `X-Forwarded-Host` header is not set.
-
-**Fix:** Ensure nginx sends `proxy_set_header X-Forwarded-Host $host;` (the example config does this).
+Email is optional. Set `SMTP_HOST` and related vars in the API service environment. Without them, password resets and campaigns are silently skipped.
