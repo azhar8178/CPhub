@@ -1,0 +1,151 @@
+ubuntu@ip-172-33-130-175:~$ # Check what's running
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+NAMES              STATUS         PORTS
+dockyard-traefik   Up 8 minutes   0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+ubuntu@ip-172-33-130-175:~$ # Restart Traefik (handles all routing)
+docker restart $(docker ps -q --filter name=traefik)
+
+# Restart Dockyard management UI
+docker restart $(docker ps -aq --filter name=dockyard)
+f3d38c836f55
+0e5d13219626
+b0f3a333654a
+67c2784af3cf
+f695c6dc96a0
+3c74af7e1600
+1ab451bc9681
+c863e325e564
+893f8152c1e7
+942efcb986e5
+e510eed81e22
+a0cc2d17603d
+8a8a78f7f889
+a25059e29a8e
+614d7f1b7f17
+4f09b5638684
+f64628feed23
+a3aa9669a555
+53ad77ca67d7
+c20ab5221029
+b61f3b0a43cb
+2f55c29ca89f
+f3d38c836f55
+Error response from daemon: Cannot restart container cc7668f76744: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container 88684f94e190: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container dbc55853e8c0: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container cf4705fdda3c: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container 03cc74db0896: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container 67b092cbf334: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container 1400f905ecbd: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container 4816c7e1519e: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container 655ec2d12971: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container b05ce53b0d92: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container 391c4ebed242: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+ubuntu@ip-172-33-130-175:~$ # Remove all stopped/broken containers
+docker container prune -f
+
+# Remove the orphaned network references
+docker network prune -f
+Deleted Containers:
+67c2784af3cf6873fdc5c063620527a7686cf167890ca902f90ff81f1e4fc91f
+f64628feed23f56a37081a4ee12e56e95fce29766d094879b555e568f035fe7d
+a3aa9669a555838f40b5534b49b19a7a5888a9cbd877a3b270d609f28c711c15
+53ad77ca67d785ed2554b8acfcc1c93d0a1797040d423b59fb81fe542e66acf6
+c20ab5221029f26d2e057a436c2758f425cecc0315c2142b33264ca1785d0d18
+b61f3b0a43cb313841fdefb83b9df15f2ad63fda44a8faebe94bcdb8c431b843
+2f55c29ca89f5a8c0b90af36fbf0ee211e9d78f889e911c80432665dce65eb40
+a287811c6c47c7ec9fb04a771202b6e691f511577540ea90cd897ab8b02fbd44
+b6fe239a16251dd3e3aba8dd9e2e2e3e28dcc6d75c8e94a1c9b8dec47ebbd4de
+56de77e1b612cba6ab727bce5baa95cd685c716fbdc06ac4e83df69673a026a0
+78c7fb56e7fb0ba82d9bac4f4ad557ff1d8b1702cf6e37cb6e7e693684ffe193
+a4555a8e6896dde1efaf5465cbf1142e2f3d5bea9f8b1db49370ade7f5423272
+cc7668f76744f17ae13bb0c5abc16e2e2757cf4d7ffc0ffffb77e6ceb788c252
+88684f94e190ebc4582b9814b05e3b5dc5ff131248dbbe5eaa7a24b0853f4529
+dbc55853e8c026c6076123a8bbdc9afbf19d074a8b024761cd7f5af508a49ee9
+cf4705fdda3cb639a3b0be0994a5d9cf98c45289d0d5c246f98f6bbb4e568c75
+03cc74db08963c16bebd29e24a86f3818161da21e6be7a42f678af5560ee13bf
+67b092cbf334253dfed4c9cfd3010d789418860f34200345346b8da09d97b4d9
+1400f905ecbdced458ad024caf2cc1d2cc2f1117b5f562a00fd72f0505334b14
+4816c7e1519ef746b3bd4d58a4c9581aff57700e45f37583a2c4c7a654748943
+655ec2d12971038a128936cc01a3058831af325c437ca677949fc49862bc1e87
+b05ce53b0d9286b301d9856b9bb1e9b21973530f238d4061400e0ae0b5289899
+391c4ebed242f5d6b5bf599b50230d6d045fce0789a9017de4ac82de10f1e726
+
+Total reclaimed space: 25.8MB
+Deleted Networks:
+self-hosted-paas_default
+
+ubuntu@ip-172-33-130-175:~$ # Check for a systemd service
+systemctl status dockyard 2>/dev/null || systemctl list-units | grep -i dock
+
+# Check for a startup script or compose file
+ls ~/  
+find /home /opt /root -name "docker-compose*" 2>/dev/null | head -10
+cat /etc/systemd/system/dockyard.service 2>/dev/null || true
+  sys-devices-virtual-net-docker0.device                                                                 loaded active plugged   /sys/devices/virtual/net/docker0
+  sys-subsystem-net-devices-docker0.device                                                               loaded active plugged   /sys/subsystem/net/devices/docker0
+  run-docker-netns-0a32b982eeaa.mount                                                                    loaded active mounted   /run/docker/netns/0a32b982eeaa
+  run-docker-netns-1a4699196563.mount                                                                    loaded active mounted   /run/docker/netns/1a4699196563
+  run-docker-netns-1c11a5c24f97.mount                                                                    loaded active mounted   /run/docker/netns/1c11a5c24f97
+  run-docker-netns-268b411b6695.mount                                                                    loaded active mounted   /run/docker/netns/268b411b6695
+  run-docker-netns-301c5b15acde.mount                                                                    loaded active mounted   /run/docker/netns/301c5b15acde
+  run-docker-netns-42276fe347cc.mount                                                                    loaded active mounted   /run/docker/netns/42276fe347cc
+  run-docker-netns-514f96e76f65.mount                                                                    loaded active mounted   /run/docker/netns/514f96e76f65
+  run-docker-netns-534b799c21fa.mount                                                                    loaded active mounted   /run/docker/netns/534b799c21fa
+  run-docker-netns-7380580fe27a.mount                                                                    loaded active mounted   /run/docker/netns/7380580fe27a
+  run-docker-netns-8b963373b0ca.mount                                                                    loaded active mounted   /run/docker/netns/8b963373b0ca
+  run-docker-netns-8ec6cb8989a8.mount                                                                    loaded active mounted   /run/docker/netns/8ec6cb8989a8
+  run-docker-netns-910fd87a13b9.mount                                                                    loaded active mounted   /run/docker/netns/910fd87a13b9
+  run-docker-netns-adad2efc9937.mount                                                                    loaded active mounted   /run/docker/netns/adad2efc9937
+  run-docker-netns-c19d36636d7f.mount                                                                    loaded active mounted   /run/docker/netns/c19d36636d7f
+  run-docker-netns-f8a2c48537e3.mount                                                                    loaded active mounted   /run/docker/netns/f8a2c48537e3
+  var-lib-docker-rootfs-overlayfs-0e5d1321962693e44c19f27b542ab42cca0784fd6f13ff50c1ad6d82eeb9a03d.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/0e5d1321962693e44c19f27b542ab42cca0784fd6f13ff50c1ad6d82eeb9a03d
+  var-lib-docker-rootfs-overlayfs-1ab451bc9681caeb1b7291fa4fc81a6d057cd013b53f26dd454f3649cb6d70e7.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/1ab451bc9681caeb1b7291fa4fc81a6d057cd013b53f26dd454f3649cb6d70e7
+  var-lib-docker-rootfs-overlayfs-3c74af7e160096b400a95810f756bb109a4679fe09aa56bf0c7014e07ccf6650.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/3c74af7e160096b400a95810f756bb109a4679fe09aa56bf0c7014e07ccf6650
+  var-lib-docker-rootfs-overlayfs-4f09b5638684f9c6cb669c0a07c5699416471b88d721e38c86c6965dc1e92ce5.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/4f09b5638684f9c6cb669c0a07c5699416471b88d721e38c86c6965dc1e92ce5
+  var-lib-docker-rootfs-overlayfs-614d7f1b7f17829ae50a9c8d70ba2519f432732374960dcbf61b29fe9ae2901a.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/614d7f1b7f17829ae50a9c8d70ba2519f432732374960dcbf61b29fe9ae2901a
+  var-lib-docker-rootfs-overlayfs-893f8152c1e737490a7398f6eed453682f05ed8c0122c2456cde41f6b341f0ee.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/893f8152c1e737490a7398f6eed453682f05ed8c0122c2456cde41f6b341f0ee
+  var-lib-docker-rootfs-overlayfs-8a8a78f7f88957debe0bb1f3b50ac3a68cf01a3d089c72af9e1840e7e633a420.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/8a8a78f7f88957debe0bb1f3b50ac3a68cf01a3d089c72af9e1840e7e633a420
+  var-lib-docker-rootfs-overlayfs-942efcb986e5df48073550f5732656d65b6eb0f0840fd66f3f8b77ca42c9f010.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/942efcb986e5df48073550f5732656d65b6eb0f0840fd66f3f8b77ca42c9f010
+  var-lib-docker-rootfs-overlayfs-a0cc2d17603d8afea7420982c2cce16f7ddda5216d953e32bd5c0a66d4e415cf.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/a0cc2d17603d8afea7420982c2cce16f7ddda5216d953e32bd5c0a66d4e415cf
+  var-lib-docker-rootfs-overlayfs-a25059e29a8e68f8706500696cfbbe456dbe6ac562fd4d7a49a389c28e324457.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/a25059e29a8e68f8706500696cfbbe456dbe6ac562fd4d7a49a389c28e324457
+  var-lib-docker-rootfs-overlayfs-b0f3a333654a0682711ac95e8d322c0ea0ac91efaad90eb8617b825aae3c635a.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/b0f3a333654a0682711ac95e8d322c0ea0ac91efaad90eb8617b825aae3c635a
+  var-lib-docker-rootfs-overlayfs-c863e325e564f4bebd8d39b79cfdc0a294ce2b206bd2b06c7d6a887095cea371.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/c863e325e564f4bebd8d39b79cfdc0a294ce2b206bd2b06c7d6a887095cea371
+  var-lib-docker-rootfs-overlayfs-e510eed81e222e3631eeb64e9184221e9b4c6defa5ea18e446ed4dcab188d78e.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/e510eed81e222e3631eeb64e9184221e9b4c6defa5ea18e446ed4dcab188d78e
+  var-lib-docker-rootfs-overlayfs-f3d38c836f5521d5eba58e5152ade219f52e5bcad8e10ddb925ed715fdefac39.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/f3d38c836f5521d5eba58e5152ade219f52e5bcad8e10ddb925ed715fdefac39
+  var-lib-docker-rootfs-overlayfs-f695c6dc96a08a345822217f4d7e94c64ac2e79754b0c264b373620a46069b98.mount loaded active mounted   /var/lib/docker/rootfs/overlayfs/f695c6dc96a08a345822217f4d7e94c64ac2e79754b0c264b373620a46069b98
+  docker-0e5d1321962693e44c19f27b542ab42cca0784fd6f13ff50c1ad6d82eeb9a03d.scope                          loaded active running   libcontainer container 0e5d1321962693e44c19f27b542ab42cca0784fd6f13ff50c1ad6d82eeb9a03d
+  docker-1ab451bc9681caeb1b7291fa4fc81a6d057cd013b53f26dd454f3649cb6d70e7.scope                          loaded active running   libcontainer container 1ab451bc9681caeb1b7291fa4fc81a6d057cd013b53f26dd454f3649cb6d70e7
+  docker-3c74af7e160096b400a95810f756bb109a4679fe09aa56bf0c7014e07ccf6650.scope                          loaded active running   libcontainer container 3c74af7e160096b400a95810f756bb109a4679fe09aa56bf0c7014e07ccf6650
+  docker-4f09b5638684f9c6cb669c0a07c5699416471b88d721e38c86c6965dc1e92ce5.scope                          loaded active running   libcontainer container 4f09b5638684f9c6cb669c0a07c5699416471b88d721e38c86c6965dc1e92ce5
+  docker-614d7f1b7f17829ae50a9c8d70ba2519f432732374960dcbf61b29fe9ae2901a.scope                          loaded active running   libcontainer container 614d7f1b7f17829ae50a9c8d70ba2519f432732374960dcbf61b29fe9ae2901a
+  docker-893f8152c1e737490a7398f6eed453682f05ed8c0122c2456cde41f6b341f0ee.scope                          loaded active running   libcontainer container 893f8152c1e737490a7398f6eed453682f05ed8c0122c2456cde41f6b341f0ee
+  docker-8a8a78f7f88957debe0bb1f3b50ac3a68cf01a3d089c72af9e1840e7e633a420.scope                          loaded active running   libcontainer container 8a8a78f7f88957debe0bb1f3b50ac3a68cf01a3d089c72af9e1840e7e633a420
+  docker-942efcb986e5df48073550f5732656d65b6eb0f0840fd66f3f8b77ca42c9f010.scope                          loaded active running   libcontainer container 942efcb986e5df48073550f5732656d65b6eb0f0840fd66f3f8b77ca42c9f010
+  docker-a0cc2d17603d8afea7420982c2cce16f7ddda5216d953e32bd5c0a66d4e415cf.scope                          loaded active running   libcontainer container a0cc2d17603d8afea7420982c2cce16f7ddda5216d953e32bd5c0a66d4e415cf
+  docker-a25059e29a8e68f8706500696cfbbe456dbe6ac562fd4d7a49a389c28e324457.scope                          loaded active running   libcontainer container a25059e29a8e68f8706500696cfbbe456dbe6ac562fd4d7a49a389c28e324457
+  docker-b0f3a333654a0682711ac95e8d322c0ea0ac91efaad90eb8617b825aae3c635a.scope                          loaded active running   libcontainer container b0f3a333654a0682711ac95e8d322c0ea0ac91efaad90eb8617b825aae3c635a
+  docker-c863e325e564f4bebd8d39b79cfdc0a294ce2b206bd2b06c7d6a887095cea371.scope                          loaded active running   libcontainer container c863e325e564f4bebd8d39b79cfdc0a294ce2b206bd2b06c7d6a887095cea371
+  docker-e510eed81e222e3631eeb64e9184221e9b4c6defa5ea18e446ed4dcab188d78e.scope                          loaded active running   libcontainer container e510eed81e222e3631eeb64e9184221e9b4c6defa5ea18e446ed4dcab188d78e
+  docker-f3d38c836f5521d5eba58e5152ade219f52e5bcad8e10ddb925ed715fdefac39.scope                          loaded active running   libcontainer container f3d38c836f5521d5eba58e5152ade219f52e5bcad8e10ddb925ed715fdefac39
+  docker-f695c6dc96a08a345822217f4d7e94c64ac2e79754b0c264b373620a46069b98.scope                          loaded active running   libcontainer container f695c6dc96a08a345822217f4d7e94c64ac2e79754b0c264b373620a46069b98
+  docker.service                                                                                         loaded active running   Docker Application Container Engine
+  docker.socket                                                                                          loaded active running   Docker Socket for the API
+Modernizer  Self-hosted-PAAS  tracker
+/home/ubuntu/Self-hosted-PAAS/docker-compose.yml
+/opt/dockyard/apps/ss/releases/cmo5cjn0z00048pgup05aqjyk/docker-compose.yml
+/opt/dockyard/apps/ss/releases/cmo5ba0ld00019lvukck19x0w/docker-compose.yml
+/opt/dockyard/apps/ss/releases/cmo5dd59a0005tm8ors3whvbv/docker-compose.yml
+/opt/dockyard/apps/ss/releases/cmo5h148l0001gbhvpygvukge/docker-compose.yml
+/opt/dockyard/apps/ss/releases/cmo5c0rdb0005cg906tam01x7/docker-compose.yml
+/opt/dockyard/apps/ss/releases/cmo5cr1ah0001svpejsxa7da4/docker-compose.yml
+/opt/dockyard/apps/ss/releases/cmo5grdod0001hzracyv999ht/docker-compose.yml
+/opt/dockyard/apps/ss/releases/cmo5dh0hn000btm8ow2q6di37/docker-compose.yml
+/opt/dockyard/apps/ss/releases/cmo5b2e7l000f13o9fjle1b9z/docker-compose.yml
+ubuntu@ip-172-33-130-175:~$ # If it's a systemd service:
+sudo systemctl restart dockyard
+
+# If it's a compose file (adjust path if different):
+cd ~/dockyard && docker compose up -d
+Failed to restart dockyard.service: Unit dockyard.service not found.
+-bash: cd: /home/ubuntu/dockyard: No such file or directory
