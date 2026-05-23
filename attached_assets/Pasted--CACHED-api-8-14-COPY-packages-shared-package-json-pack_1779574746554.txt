@@ -1,0 +1,47 @@
+ => CACHED [api  8/14] COPY packages/shared/package.json packages/shared/package.json                                                                                 0.0s
+ => CACHED [api  9/14] COPY packages/deployment-runner/package.json packages/deployment-runner/package.json                                                           0.0s
+ => CACHED [api 10/14] COPY packages/proxy/package.json packages/proxy/package.json                                                                                   0.0s
+ => ERROR [dashboard 10/13] RUN npm install                                                                                                                          29.3s
+ => ERROR [api 11/14] RUN npm install                                                                                                                                29.3s
+------                                                                                                                                                                     
+ > [dashboard 10/13] RUN npm install:                                                                                                                                      
+27.31 npm warn tar TAR_ENTRY_ERROR ENOSPC: no space left on device, write                                                                                                  
+27.31 npm warn tar TAR_ENTRY_ERROR ENOSPC: no space left on device, write                                                                                                  
+27.31 npm notice                                                                                                                                                           
+27.31 npm notice New major version of npm available! 10.8.2 -> 11.15.0
+27.31 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.15.0
+27.31 npm notice To update run: npm install -g npm@11.15.0
+27.31 npm notice
+27.32 npm error A complete log of this run can be found in: /root/.npm/_logs/2026-05-23T22_18_27_156Z-debug-0.log
+------
+------
+ > [api 11/14] RUN npm install:
+27.31 npm warn tar TAR_ENTRY_ERROR ENOSPC: no space left on device, write
+27.31 npm warn tar TAR_ENTRY_ERROR ENOSPC: no space left on device, write
+27.32 npm notice
+27.32 npm notice New major version of npm available! 10.8.2 -> 11.15.0
+27.32 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.15.0
+27.32 npm notice To update run: npm install -g npm@11.15.0
+27.32 npm notice
+27.32 npm error A complete log of this run can be found in: /root/.npm/_logs/2026-05-23T22_18_27_182Z-debug-0.log
+------
+[+] up 0/2
+ ⠙ Image self-hosted-paas-api       Building                                                                                                                          30.6s
+ ⠙ Image self-hosted-paas-dashboard Building                                                                                                                          30.6s
+Dockerfile:11
+
+--------------------
+
+   9 |     COPY packages/deployment-runner/package.json packages/deployment-runner/package.json
+
+  10 |     COPY packages/proxy/package.json packages/proxy/package.json
+
+  11 | >>> RUN npm install
+
+  12 |     COPY . .
+
+  13 |     RUN npm run prisma:generate --workspace @dockyard/api && npm run build --workspace @dockyard/api
+
+--------------------
+
+target api: failed to solve: process "/bin/sh -c npm install" did not complete successfully: exit code: 1
