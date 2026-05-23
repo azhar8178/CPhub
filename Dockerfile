@@ -22,7 +22,7 @@ RUN pnpm --filter @cphub/web run build
 FROM deps AS build-admin
 COPY . .
 ARG BASE_PATH=/
-ARG VITE_API_URL=http://localhost:3001
+ARG VITE_API_URL=http://cph-api.paas.lovekitchens.ie
 ENV BASE_PATH=$BASE_PATH
 ENV VITE_API_URL=$VITE_API_URL
 RUN pnpm --filter @cphub/admin run build
