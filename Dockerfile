@@ -26,11 +26,10 @@ ENV VITE_API_URL=$VITE_API_URL
 RUN pnpm --filter @cphub/admin run build
 
 # ── Production image ──────────────────────────────────────────────────────────
-FROM base AS runner
+# Inherit from deps so all node_modules (including tsx) are already present
+# and pnpm's symlinks stay intact — manual COPY of node_modules breaks them.
+FROM deps AS runner
 ENV NODE_ENV=production
-
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
 
 COPY apps/api ./apps/api
 COPY packages/db ./packages/db
@@ -40,4 +39,4 @@ COPY --from=build-web /app/apps/web/dist/public ./apps/web/dist/public
 COPY --from=build-admin /app/apps/admin/dist/public ./apps/admin/dist/public
 
 EXPOSE 3001
-CMD ["node", "--loader", "tsx/esm", "apps/api/src/index.ts"]
+CMD ["pnpm", "--filter", "@cphub/api", "run", "start"]
