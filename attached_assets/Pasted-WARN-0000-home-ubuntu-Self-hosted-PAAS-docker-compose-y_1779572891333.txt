@@ -1,0 +1,30 @@
+WARN[0000] /home/ubuntu/Self-hosted-PAAS/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+[+] up 6/6
+ ✔ Network self-hosted-paas_default       Created                                                                                                                      0.0s
+ ✔ Container self-hosted-paas-redis-1     Started                                                                                                                     36.6s
+ ✔ Container self-hosted-paas-postgres-1  Started                                                                                                                     36.6s
+ ✔ Container self-hosted-paas-worker-1    Started                                                                                                                     36.7s
+ ✔ Container self-hosted-paas-api-1       Started                                                                                                                     36.8s
+ ✔ Container self-hosted-paas-dashboard-1 Started                                                                                                                     17.0s
+ubuntu@ip-172-33-130-175:~/Self-hosted-PAAS$ docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+NAMES                                    STATUS              PORTS
+self-hosted-paas-dashboard-1             Up About a minute   0.0.0.0:5000->5000/tcp, [::]:5000->5000/tcp
+self-hosted-paas-worker-1                Up About a minute   
+self-hosted-paas-api-1                   Up About a minute   0.0.0.0:4000->4000/tcp, [::]:4000->4000/tcp
+self-hosted-paas-postgres-1              Up About a minute   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp
+self-hosted-paas-redis-1                 Up About a minute   0.0.0.0:6379->6379/tcp, [::]:6379->6379/tcp
+dockyard-cph-web-production-cmpiu9uf     Up 4 minutes        3001/tcp
+dockyard-cph-api-production-cmpiu4v4     Up 4 minutes        3001/tcp
+dockyard-cph-admin-production-cmpis5sc   Up 4 minutes        3001/tcp
+dockyard-cph-admin-production-cmpis24x   Up 4 minutes        3001/tcp
+dockyard-cph-admin-production-cmpirplu   Up 4 minutes        3001/tcp
+dockyard-cph-admin-production-cmpirjy2   Up 4 minutes        3001/tcp
+dockyard-cph-api-production-cmpiqzun     Up 4 minutes        3001/tcp
+dockyard-cph-web-production-cmpifnqz     Up 4 minutes        3001/tcp
+dockyard-cph-admin-production-cmpifnej   Up 4 minutes        3001/tcp
+dockyard-cph-api-production-cmpicyh9     Up 4 minutes        3001/tcp
+dockyard-cph-web-production-cmpicy7z     Up 4 minutes        3001/tcp
+dockyard-cph-admin-production-cmpicxxv   Up 4 minutes        3001/tcp
+dockyard-svc-cphub                       Up 4 minutes        0.0.0.0:43471->5432/tcp, [::]:43471->5432/tcp
+dockyard-cp-production-cmphk9y5          Up 4 minutes        3000/tcp
+dockyard-traefik                         Up 4 minutes        0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
