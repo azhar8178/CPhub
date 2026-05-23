@@ -9,6 +9,6 @@ COPY packages/ packages/
 RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm --filter @cphub/web run build
-RUN npm install -g serve
-EXPOSE 3000
-CMD ["serve", "-s", "apps/web/dist/public", "-l", "3000"]
+RUN npm install -g serve concurrently
+EXPOSE 3001
+CMD ["concurrently", "pnpm --filter @cphub/api run start", "serve -s apps/web/dist/public -l 5000"]
