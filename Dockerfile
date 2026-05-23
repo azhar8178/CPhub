@@ -31,7 +31,6 @@ ENV NODE_ENV=production
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
-COPY --from=deps /app/packages/db/node_modules ./packages/db/node_modules 2>/dev/null || true
 
 COPY apps/api ./apps/api
 COPY packages/db ./packages/db
