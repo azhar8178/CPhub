@@ -1,6 +1,8 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
+import path from "path";
+import fs from "fs";
 import { logger } from "./lib/logger";
 import apiRouter from "./routes";
 import { db, cphubPagesTable, cphubPostsTable } from "@cphub/db";
@@ -83,8 +85,39 @@ app.get("/sitemap.xml", async (req, res) => {
   }
 });
 
-app.get("/", (_req, res) => {
-  res.json({ name: "cphub-api", status: "ok" });
-});
+// ── Production static file serving ───────────────────────────────────────────
+// In development the Vite dev servers handle /admin and the web SPA.
+// In production (NODE_ENV=production) the built files are served here.
+if (process.env.NODE_ENV === "production") {
+  const webDist = path.resolve(import.meta.dirname, "../../web/dist/public");
+  const adminDist = path.resolve(import.meta.dirname, "../../admin/dist/public");
+
+  const webExists = fs.existsSync(webDist);
+  const adminExists = fs.existsSync(adminDist);
+
+  if (adminExists) {
+    // Serve admin static assets (JS/CSS chunks have /admin/ prefix from Vite base)
+    app.use("/admin", express.static(adminDist, { index: false }));
+    // SPA fallback — any /admin/* path returns admin's index.html
+    app.get("/admin", (_req, res) => res.sendFile(path.join(adminDist, "index.html")));
+    app.get("/admin/*path", (_req, res) => res.sendFile(path.join(adminDist, "index.html")));
+    logger.info({ adminDist }, "Serving admin static files");
+  } else {
+    logger.warn({ adminDist }, "Admin build not found — run: pnpm --filter @cphub/admin run build");
+  }
+
+  if (webExists) {
+    // Serve web static assets
+    app.use(express.static(webDist, { index: false }));
+    // SPA fallback — everything else returns the web app's index.html
+    app.get("*path", (_req, res) => res.sendFile(path.join(webDist, "index.html")));
+    logger.info({ webDist }, "Serving web static files");
+  } else {
+    logger.warn({ webDist }, "Web build not found — run: pnpm --filter @cphub/web run build");
+    app.get("/", (_req, res) => res.json({ name: "cphub-api", status: "ok" }));
+  }
+} else {
+  app.get("/", (_req, res) => res.json({ name: "cphub-api", status: "ok" }));
+}
 
 export default app;
