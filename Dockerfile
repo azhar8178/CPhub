@@ -26,10 +26,16 @@ ENV VITE_API_URL=$VITE_API_URL
 RUN pnpm --filter @cphub/admin run build
 
 # ── Production image ──────────────────────────────────────────────────────────
-# Inherit from deps so all node_modules (including tsx) are already present
-# and pnpm's symlinks stay intact — manual COPY of node_modules breaks them.
+# TARGET_APP controls which service this container runs:
+#   api   → runs the Express API on port 3001 (default)
+#   web   → serves the web SPA with `serve` on port 3000
+#   admin → serves the admin SPA with `serve` on port 5173
 FROM deps AS runner
+RUN npm install -g serve
 ENV NODE_ENV=production
+
+ARG TARGET_APP=api
+ENV TARGET_APP=$TARGET_APP
 
 COPY apps/api ./apps/api
 COPY packages/db ./packages/db
@@ -38,5 +44,13 @@ COPY package.json pnpm-workspace.yaml ./
 COPY --from=build-web /app/apps/web/dist/public ./apps/web/dist/public
 COPY --from=build-admin /app/apps/admin/dist/public ./apps/admin/dist/public
 
-EXPOSE 3001
-CMD ["pnpm", "--filter", "@cphub/api", "run", "start"]
+# Port is set by the CMD/serve command — Dockyard should use the port
+# configured in its app settings (3001 for api, 3000 for web, 5173 for admin)
+CMD ["sh", "-c", "\
+  if [ \"$TARGET_APP\" = \"web\" ]; then \
+    exec serve -s apps/web/dist/public -l 3000 --single; \
+  elif [ \"$TARGET_APP\" = \"admin\" ]; then \
+    exec serve -s apps/admin/dist/public -l 5173 --single; \
+  else \
+    pnpm --filter @cphub/db run migrate && exec pnpm --filter @cphub/api run start; \
+  fi"]
