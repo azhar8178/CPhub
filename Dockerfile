@@ -9,7 +9,7 @@ COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
 COPY apps/admin/package.json apps/admin/
 COPY packages/db/package.json packages/db/
-RUN echo 'onlyBuiltDependencies[]=esbuild' >> .npmrc && pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --ignore-scripts && pnpm rebuild esbuild
 
 # ── Build web ─────────────────────────────────────────────────────────────────
 FROM deps AS build-web

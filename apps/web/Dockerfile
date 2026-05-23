@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/web/package.json apps/web/
 COPY packages/db/package.json packages/db/
-RUN echo 'onlyBuiltDependencies[]=esbuild' >> .npmrc && pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --ignore-scripts && pnpm rebuild esbuild
 
 FROM deps AS builder
 COPY . .
