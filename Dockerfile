@@ -11,4 +11,4 @@ COPY . .
 RUN pnpm --filter @cphub/web run build
 RUN npm install -g serve
 EXPOSE 3000
-CMD ["serve", "-s", "apps/web/dist", "-l", "3000"]
+CMD ["serve", "-s", "apps/web/dist/public", "-l", "3000"]
