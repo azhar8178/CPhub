@@ -1,0 +1,41 @@
+ip-172-33-130-175 login: 2026/04/19 01:11:39Z: Amazon SSM Agent v3.3.3050.0 is running
+2026/04/19 01:11:39Z: OsProductName: Ubuntu
+2026/04/19 01:11:39Z: OsVersion: 24.04
+
+                                                   
+2026/04/19 01:12:11Z: Amazon SSM Agent v3.3.4177.0 is running
+2026/04/19 01:12:11Z: OsProductName: Ubuntu
+2026/04/19 01:12:11Z: OsVersion: 24.04
+2026/04/19 06:26:10Z: Amazon SSM Agent v3.3.4121.0 is running
+2026/04/19 06:26:10Z: OsProductName: Ubuntu
+2026/04/19 06:26:10Z: OsVersion: 24.04
+2026/04/22 11:14:32Z: Amazon SSM Agent v3.3.4177.0 is running
+2026/04/22 11:14:32Z: OsProductName: Ubuntu
+2026/04/22 11:14:32Z: OsVersion: 24.04
+2026/04/22 17:36:22Z: Amazon SSM Agent v3.3.4121.0 is running
+2026/04/22 17:36:22Z: OsProductName: Ubuntu
+2026/04/22 17:36:22Z: OsVersion: 24.04
+2026/04/28 10:47:53Z: Amazon SSM Agent v3.3.4268.0 is running
+2026/04/28 10:47:53Z: OsProductName: Ubuntu
+2026/04/28 10:47:53Z: OsVersion: 24.04
+2026/04/28 16:31:23Z: Amazon SSM Agent v3.3.4121.0 is running
+2026/04/28 16:31:23Z: OsProductName: Ubuntu
+2026/04/28 16:31:23Z: OsVersion: 24.04
+2026/05/06 11:13:59Z: Amazon SSM Agent v3.3.4268.0 is running
+2026/05/06 11:13:59Z: OsProductName: Ubuntu
+2026/05/06 11:13:59Z: OsVersion: 24.04
+2026/05/06 16:36:22Z: Amazon SSM Agent v3.3.4121.0 is running
+2026/05/06 16:36:22Z: OsProductName: Ubuntu
+2026/05/06 16:36:22Z: OsVersion: 24.04
+2026/05/12 10:47:54Z: Amazon SSM Agent v3.3.4364.0 is running
+2026/05/12 10:47:54Z: OsProductName: Ubuntu
+2026/05/12 10:47:54Z: OsVersion: 24.04
+2026/05/12 12:16:22Z: Amazon SSM Agent v3.3.4121.0 is running
+2026/05/12 12:16:22Z: OsProductName: Ubuntu
+2026/05/12 12:16:22Z: OsVersion: 24.04
+2026/05/20 11:14:30Z: Amazon SSM Agent v3.3.4364.0 is running
+2026/05/20 11:14:30Z: OsProductName: Ubuntu
+2026/05/20 11:14:30Z: OsVersion: 24.04
+2026/05/20 17:01:22Z: Amazon SSM Agent v3.3.4121.0 is running
+2026/05/20 17:01:22Z: OsProductName: Ubuntu
+2026/05/20 17:01:22Z: OsVersion: 24.04
