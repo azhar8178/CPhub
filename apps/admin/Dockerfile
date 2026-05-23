@@ -6,6 +6,6 @@ COPY apps/admin/package.json apps/admin/
 COPY packages/ packages/
 RUN pnpm install --frozen-lockfile
 COPY . .
-RUN pnpm --filter @cphub/admin run build
+RUN cd /app && pnpm --filter @cphub/admin run build
 EXPOSE 5173
 CMD ["sh", "-c", "unset PORT && serve -s apps/admin/dist/public -l 5173"]
