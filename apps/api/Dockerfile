@@ -7,4 +7,4 @@ COPY packages/ packages/
 RUN pnpm install --frozen-lockfile
 COPY . .
 EXPOSE 3001
-CMD ["pnpm", "--filter", "@cphub/api", "run", "start"]
+CMD ["sh", "-c", "pnpm --filter @cphub/db run migrate && pnpm --filter @cphub/api run start"]
