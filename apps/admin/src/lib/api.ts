@@ -1,5 +1,7 @@
 const KEY = "cphub_admin_token";
 
+const API_BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
+
 export function getToken(): string | null {
   return localStorage.getItem(KEY);
 }
@@ -9,7 +11,7 @@ export function setToken(t: string | null) {
 }
 
 async function req<T>(method: string, path: string, body?: unknown): Promise<T> {
-  const r = await fetch(`/api${path}`, {
+  const r = await fetch(`${API_BASE}/api${path}`, {
     method,
     headers: {
       "Content-Type": "application/json",
@@ -20,7 +22,7 @@ async function req<T>(method: string, path: string, body?: unknown): Promise<T> 
   if (r.status === 401) {
     setToken(null);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (typeof window !== "undefined") window.location.href = "/admin/login";
+    if (typeof window !== "undefined") window.location.href = "/login";
     throw new Error("Unauthorized");
   }
   if (!r.ok) {
@@ -33,7 +35,7 @@ async function req<T>(method: string, path: string, body?: unknown): Promise<T> 
 
 export const api = {
   login: async (email: string, password: string) => {
-    const r = await fetch("/api/auth/login", {
+    const r = await fetch(`${API_BASE}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
