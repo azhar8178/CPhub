@@ -1,0 +1,43 @@
+ubuntu@ip-172-33-130-175:~$ # Check what's running
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+NAMES              STATUS         PORTS
+dockyard-traefik   Up 8 minutes   0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+ubuntu@ip-172-33-130-175:~$ # Restart Traefik (handles all routing)
+docker restart $(docker ps -q --filter name=traefik)
+
+# Restart Dockyard management UI
+docker restart $(docker ps -aq --filter name=dockyard)
+f3d38c836f55
+0e5d13219626
+b0f3a333654a
+67c2784af3cf
+f695c6dc96a0
+3c74af7e1600
+1ab451bc9681
+c863e325e564
+893f8152c1e7
+942efcb986e5
+e510eed81e22
+a0cc2d17603d
+8a8a78f7f889
+a25059e29a8e
+614d7f1b7f17
+4f09b5638684
+f64628feed23
+a3aa9669a555
+53ad77ca67d7
+c20ab5221029
+b61f3b0a43cb
+2f55c29ca89f
+f3d38c836f55
+Error response from daemon: Cannot restart container cc7668f76744: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container 88684f94e190: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container dbc55853e8c0: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container cf4705fdda3c: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container 03cc74db0896: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container 67b092cbf334: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container 1400f905ecbd: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container 4816c7e1519e: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container 655ec2d12971: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container b05ce53b0d92: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
+Error response from daemon: Cannot restart container 391c4ebed242: failed to set up container networking: network 3d0fb36cb968b94c5ed94d56d0bf7d2ae9c63c75f4650e884ea8897ff962d7c6 not found
