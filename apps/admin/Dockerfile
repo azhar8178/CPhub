@@ -8,4 +8,4 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm --filter @cphub/admin run build
 EXPOSE 5173
-CMD ["serve", "-s", "apps/admin/dist", "-l", "5173"]
+CMD ["sh", "-c", "unset PORT && serve -s apps/admin/dist/public -l 5173"]
